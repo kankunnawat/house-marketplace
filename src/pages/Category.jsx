@@ -12,34 +12,40 @@ import {
 import { db } from '../firebase.config'
 import { toast } from 'react-toastify'
 import Spinner from '../components/Spinner'
+import ListingItem from '../components/ListingItem'
 
 function Category() {
   const [listings, setListings] = useState(null)
   const [loading, setLoading] = useState(true)
+
   const params = useParams()
 
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        // Get Reference
+        // Get reference
         const listingsRef = collection(db, 'listings')
-        // Create a Query
+
+        // Create a query
         const q = query(
           listingsRef,
           where('type', '==', params.categoryName),
           orderBy('timestamp', 'desc'),
           limit(10)
         )
-        // Execute Query
+
+        // Execute query
         const querySnap = await getDocs(q)
 
         const listings = []
+
         querySnap.forEach((doc) => {
           return listings.push({
             id: doc.id,
             data: doc.data(),
           })
         })
+
         setListings(listings)
         setLoading(false)
       } catch (error) {
@@ -49,15 +55,17 @@ function Category() {
 
     fetchListings()
   }, [params.categoryName])
+
   return (
     <div className="category">
       <header>
         <p className="pageHeader">
           {params.categoryName === 'rent'
             ? 'Places for rent'
-            : 'Places for sell'}
+            : 'Places for sale'}
         </p>
       </header>
+
       {loading ? (
         <Spinner />
       ) : listings && listings.length > 0 ? (
@@ -65,7 +73,11 @@ function Category() {
           <main>
             <ul className="categoryListings">
               {listings.map((listing) => (
-                <h3>{listing.data.name}</h3>
+                <ListingItem
+                  listing={listing.data}
+                  id={listing.id}
+                  key={listing.id}
+                />
               ))}
             </ul>
           </main>
