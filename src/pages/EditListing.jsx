@@ -14,6 +14,7 @@ import { toast } from 'react-toastify'
 import { doc, updateDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 
 function EditListing() {
+  // eslint-disable-next-line
   const [geolocationEnabled, setGeolocationEnabled] = useState(true)
   const [loading, setLoading] = useState(false)
   const [listing, setListing] = useState()
@@ -60,6 +61,7 @@ function EditListing() {
       toast.error('You are not authorized to edit this listing')
       navigate('/')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   // Fetch listing to edit
   useEffect(() => {
@@ -162,6 +164,8 @@ function EditListing() {
                 break
               case 'running':
                 console.log('Upload is running')
+                break
+              default:
                 break
             }
           },
