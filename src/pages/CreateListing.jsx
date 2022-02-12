@@ -102,6 +102,7 @@ function CreateListing() {
         data.status === 'ZERO_RESULTS'
           ? undefined
           : data.results[0]?.formatted_address
+
       if (location === undefined || location.includes('undefined')) {
         setLoading(false)
         toast.error('Please enter a correct address')
@@ -110,7 +111,6 @@ function CreateListing() {
     } else {
       geolocation.at = latitude
       geolocation.lng = longitude
-      location = address
     }
 
     // Store images in firebase
@@ -165,10 +165,9 @@ function CreateListing() {
       geolocation,
       timestamp: serverTimestamp(),
     }
+    formDataCopy.location = address
     delete formDataCopy.images
     delete formDataCopy.address
-
-    location && (formDataCopy.location = location)
     !formDataCopy.offer && delete formDataCopy.discountedPrice
 
     const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
